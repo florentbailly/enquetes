@@ -1248,16 +1248,7 @@ function fondMenu(){
   </svg>`;
 }
 function ecranTitre(){
-  CAS = null;
-   S = {
-    ecran: "titre",
-    son: S.son,
-    indices: [],
-    faits: {},
-    deductions: {},
-    raisons: {},
-    fini: false
-  };
+  CAS = null; S = { ecran:"titre", son:S.son };
   $("#titre-affaire").textContent = "🔍 Mystery Lane";
   majUI();
   const cartes = CASES.map(c=>{
