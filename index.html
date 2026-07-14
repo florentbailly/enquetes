@@ -367,7 +367,10 @@ let CAS = null;                    // enquête sélectionnée
 const CASES = [];                  // registre (rempli en bas de fichier)
 /* données de l'enquête active (réassignées par activerCas) */
 let INDICES = {}, NB_INDICES = 0, SUSPECTS = {}, DEDUCTIONS = {}, ORDRE_DED = [], PREUVES = [], LIEUX = {};
-let S = { ecran:"titre", son:true };
+/* état de base : TOUS les champs existent toujours, même hors enquête
+   (sinon majUI plante sur S.indices.length et l'écran d'accueil reste blanc) */
+function etatVide(son){ return { ecran:"titre", lieu:null, indices:[], faits:{}, deductions:{}, raisons:{}, son:(son!==undefined?son:true), fini:false }; }
+let S = etatVide(true);
 
 function activerCas(def){
   CAS = def;
@@ -377,10 +380,7 @@ function activerCas(def){
   $("#titre-affaire").textContent = def.emoji + " " + def.titre;
 }
 function etatNeuf(){
-  return Object.assign(
-    { ecran:"titre", lieu:null, indices:[], faits:{}, deductions:{}, raisons:{}, son:S.son, fini:false },
-    CAS.etatNeuf()
-  );
+  return Object.assign(etatVide(S.son), CAS.etatNeuf());
 }
 function sauver(){ if(!CAS) return; try{ localStorage.setItem(CAS.cle, JSON.stringify(S)); }catch(e){} }
 function charger(cle){ try{ const d = localStorage.getItem(cle); return d ? JSON.parse(d) : null; }catch(e){ return null; } }
@@ -560,6 +560,61 @@ inko:`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#3a1f5c"/>
 <path d="M33 40 q6 -4 12 -1 M57 39 q6 -3 12 1" stroke="#5a2f7a" stroke-width="2" fill="none" stroke-linecap="round"/>
 <path d="M42 56 Q50 62 58 56" stroke="#5a2f7a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
 <circle cx="34" cy="64" r="2.4" fill="#d99cf0"/><circle cx="66" cy="64" r="2.4" fill="#d99cf0"/><circle cx="50" cy="70" r="2.4" fill="#d99cf0"/></svg>`,
+sylvain:`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#3f6f4f"/>
+<path d="M50 8 L58 26 L70 16 L68 34 L84 30 L74 44 L90 48 L74 54 L84 66 L68 62 L50 64 L32 62 L16 66 L26 54 L10 48 L26 44 L16 30 L32 34 L30 16 L42 26 Z" fill="#6a4a2f"/>
+<ellipse cx="50" cy="64" rx="26" ry="22" fill="#d8ab72"/>
+<circle cx="40" cy="60" r="5" fill="#2b2340"/><circle cx="60" cy="60" r="5" fill="#2b2340"/>
+<circle cx="41.5" cy="58.5" r="1.6" fill="#fff"/><circle cx="61.5" cy="58.5" r="1.6" fill="#fff"/>
+<ellipse cx="50" cy="70" rx="6" ry="4.5" fill="#2b2340"/>
+<path d="M42 78 Q50 83 58 78" stroke="#8a5a3a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<path d="M30 22 q9 -11 17 -2" stroke="#3fae5a" stroke-width="4" fill="none" stroke-linecap="round"/></svg>`,
+nocto:`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#2a2450"/>
+<ellipse cx="50" cy="58" rx="30" ry="32" fill="#7a6a52"/>
+<path d="M24 34 L20 14 L38 26 Z" fill="#6a5a44"/><path d="M76 34 L80 14 L62 26 Z" fill="#6a5a44"/>
+<circle cx="38" cy="50" r="13" fill="#f4efe0"/><circle cx="62" cy="50" r="13" fill="#f4efe0"/>
+<circle cx="38" cy="50" r="7" fill="#f4a52e"/><circle cx="62" cy="50" r="7" fill="#f4a52e"/>
+<circle cx="38" cy="50" r="3.5" fill="#1b2144"/><circle cx="62" cy="50" r="3.5" fill="#1b2144"/>
+<circle cx="39.5" cy="48.5" r="1.2" fill="#fff"/><circle cx="63.5" cy="48.5" r="1.2" fill="#fff"/>
+<path d="M50 56 l-5 6 h10 z" fill="#f4a52e"/>
+<path d="M30 74 Q50 84 70 74" stroke="#5a4a38" stroke-width="4" fill="none"/></svg>`,
+gustave:`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#4a4a55"/>
+<ellipse cx="50" cy="58" rx="30" ry="30" fill="#e8e6de"/>
+<circle cx="30" cy="34" r="10" fill="#3a3a44"/><circle cx="70" cy="34" r="10" fill="#3a3a44"/>
+<circle cx="30" cy="34" r="4" fill="#e8e6de"/><circle cx="70" cy="34" r="4" fill="#e8e6de"/>
+<path d="M42 30 Q34 60 40 78 L46 78 Q42 56 48 32 Z" fill="#3a3a44"/>
+<path d="M58 30 Q66 60 60 78 L54 78 Q58 56 52 32 Z" fill="#3a3a44"/>
+<circle cx="40" cy="54" r="4.5" fill="#2b2340"/><circle cx="60" cy="54" r="4.5" fill="#2b2340"/>
+<circle cx="41.5" cy="52.5" r="1.4" fill="#fff"/><circle cx="61.5" cy="52.5" r="1.4" fill="#fff"/>
+<ellipse cx="50" cy="66" rx="6" ry="4.5" fill="#2b2340"/>
+<path d="M42 74 Q50 79 58 74" stroke="#8a5a3a" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+barnabe:`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#5a3f2a"/>
+<circle cx="26" cy="28" r="13" fill="#8a5a38"/><circle cx="74" cy="28" r="13" fill="#8a5a38"/>
+<circle cx="26" cy="28" r="6" fill="#b98a5a"/><circle cx="74" cy="28" r="6" fill="#b98a5a"/>
+<ellipse cx="50" cy="58" rx="36" ry="34" fill="#8a5a38"/>
+<ellipse cx="50" cy="66" rx="20" ry="16" fill="#c9a06a"/>
+<circle cx="38" cy="50" r="5" fill="#2b2340"/><circle cx="62" cy="50" r="5" fill="#2b2340"/>
+<circle cx="39.5" cy="48.5" r="1.6" fill="#fff"/><circle cx="63.5" cy="48.5" r="1.6" fill="#fff"/>
+<ellipse cx="50" cy="62" rx="7" ry="5.5" fill="#2b2340"/>
+<path d="M42 72 Q50 78 58 72" stroke="#5a3a24" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+pinpon:`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#42506a"/>
+<path d="M26 30 L22 16 L38 24 Z" fill="#6a6a74"/><path d="M74 30 L78 16 L62 24 Z" fill="#6a6a74"/>
+<ellipse cx="50" cy="58" rx="30" ry="30" fill="#9aa0ac"/>
+<path d="M22 48 Q38 40 46 52 Q40 60 24 58 Z" fill="#2b2340"/>
+<path d="M78 48 Q62 40 54 52 Q60 60 76 58 Z" fill="#2b2340"/>
+<circle cx="38" cy="52" r="4.5" fill="#fff"/><circle cx="38" cy="52" r="2.4" fill="#1b2144"/>
+<circle cx="62" cy="52" r="4.5" fill="#fff"/><circle cx="62" cy="52" r="2.4" fill="#1b2144"/>
+<ellipse cx="50" cy="64" rx="5" ry="4" fill="#2b2340"/>
+<path d="M42 72 Q50 77 58 72" stroke="#5a5a64" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<path d="M30 88 L54 78" stroke="#f4efe0" stroke-width="6" stroke-linecap="round"/></svg>`,
+filoue:`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#6a3fa0"/>
+<circle cx="28" cy="30" r="15" fill="#b8b0bc"/><circle cx="72" cy="30" r="15" fill="#b8b0bc"/>
+<circle cx="28" cy="30" r="8" fill="#f6c9de"/><circle cx="72" cy="30" r="8" fill="#f6c9de"/>
+<ellipse cx="50" cy="58" rx="28" ry="28" fill="#c8c2ce"/>
+<circle cx="40" cy="54" r="5" fill="#2b2340"/><circle cx="60" cy="54" r="5" fill="#2b2340"/>
+<circle cx="41.5" cy="52.5" r="1.6" fill="#fff"/><circle cx="61.5" cy="52.5" r="1.6" fill="#fff"/>
+<ellipse cx="50" cy="64" rx="4" ry="3" fill="#d0607a"/>
+<path d="M30 60 L14 58 M30 66 L15 68 M70 60 L86 58 M70 66 L85 68" stroke="#e8e0ec" stroke-width="1.2"/>
+<path d="M42 72 Q50 77 58 72" stroke="#8a5a3a" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>`,
 recit:`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#1f2857"/>
 <circle cx="46" cy="44" r="22" fill="none" stroke="#ffc857" stroke-width="7"/>
 <line x1="61" y1="61" x2="82" y2="84" stroke="#ffc857" stroke-width="10" stroke-linecap="round"/>
@@ -568,6 +623,7 @@ recit:`<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#1f2857"/
 const NOMS = { clever:"Clever", bro:"Bro", mcflare:"Détective McFlare", barnaby:"Barnaby, le gardien",
   plume:"Plume, le pigeon", furet:"M. Furet", zigzag:"Zigzag", rita:"Rita", hector:"Hector",
   pepin:"Pépin, le gardien", ecume:"Écume, la mouette", pinces:"Père Pinces", ronron:"Ronron", gaston:"Gaston", inko:"Inko",
+  sylvain:"Sylvain, le gardien", nocto:"Nocto, la chouette", gustave:"Gustave le Blaireau", barnabe:"Barnabé", pinpon:"Pin-Pon", filoue:"Filoue",
   recit:"L'enquête" };
 
 /* ---------- ENQUÊTE 1 — DONNÉES : INDICES ---------- */
@@ -1249,15 +1305,7 @@ function fondMenu(){
 }
 function ecranTitre(){
   CAS = null;
-   S = {
-    ecran: "titre",
-    son: S.son,
-    indices: [],
-    faits: {},
-    deductions: {},
-    raisons: {},
-    fini: false
-  };
+  S = etatVide(S.son);
   $("#titre-affaire").textContent = "🔍 Mystery Lane";
   majUI();
   const cartes = CASES.map(c=>{
@@ -2186,7 +2234,580 @@ const CAS_DRAGON = {
   art:{ titre:artTitre_D, carte:artCarte_D, fin:artFin_D, lieux:{ aquarium:artAquarium_D, ponton:artPonton_D, echoppe:artEchoppe_D } }
 };
 
-CASES.push(CAS_FANTOME, CAS_DRAGON);
+/* ============================================================
+   ENQUÊTE 3 : L'AFFAIRE DU SPECTRE DE GIVRE
+   ============================================================ */
+
+/* ---------- DONNÉES : INDICES (12) ---------- */
+const IND_G = {
+  t_sylvain:{ ico:"👁️", nom:"Le récit de Sylvain", desc:"« Un spectre de givre a glissé entre mes plantes, un froid brumeux partout... et l'Orchidée d'Or a disparu ! La serre était fermée à clé ! »" },
+  loquerayures:{ ico:"🔍", nom:"Loquet rayé", desc:"La cloche de verre de l'Orchidée n'est pas cassée : son petit loquet porte de fines rayures." },
+  billesfroides:{ ico:"❄️", nom:"Billes qui fument", desc:"De petites billes blanches qui fument et répandent un froid glacial. Dans la main... elles disparaissent !" },
+  passerelle:{ ico:"🕳️", nom:"Passerelle de verre", desc:"Au-dessus du bassin aux nénuphars, une fine passerelle de verre. Intacte, pas la moindre fêlure." },
+  empreintegivre:{ ico:"🐾", nom:"Empreinte dans le givre", desc:"Sur la passerelle givrée, une toute petite empreinte de patte, incroyablement légère." },
+  t_nocto:{ ico:"🦉", nom:"Le récit de Nocto", desc:"« Le spectre ne marchait pas : il a GRIMPÉ le grand palmier, avec ses deux mains, puis noué une corde. Il a filé vers le kiosque ! »" },
+  deuxmains:{ ico:"🖐️", nom:"Marques de deux mains", desc:"Sur le tronc du grand palmier : deux empreintes de mains, et une corde nouée qui a bien demandé deux mains." },
+  prospectus3:{ ico:"📜", nom:"Prospectus du Bazar", desc:"« Bazar d'Hiver — Gustave le Blaireau ». Trouvé sous un tas de feuilles." },
+  brouillardpoudre:{ ico:"🌫️", nom:"Brouillard en poudre", desc:"Gustave a vendu ces billes qui fument mardi... à un petit client encapuchonné, un artiste." },
+  bulbes:{ ico:"🧅", nom:"Payé en bulbes", desc:"Le client de Gustave a payé avec une poignée de bulbes de tulipe !" },
+  limefine:{ ico:"🪚", nom:"La lime fine", desc:"Le client a aussi acheté une lime très fine, « pour les petits loquets »." },
+  affiche3:{ ico:"🎪", nom:"L'affiche du Concours", desc:"Filoue la souris, acrobate : son numéro du « Spectre » a raté, tout le public a ri." }
+};
+
+/* ---------- DONNÉES : SUSPECTS (3) ---------- */
+const SUS_G = {
+  barnabe:{ nom:"Barnabé l'Ours", desc:"Finaliste du Concours. Une force de la nature... et un sacré poids." },
+  pinpon:{ nom:"Pin-Pon le Raton", desc:"Finaliste bricoleur. Il a le bras droit en écharpe depuis sa chute." },
+  filoue:{ nom:"Filoue la Souris", desc:"Acrobate et funambule du Concours. Minuscule, légère, agile de ses deux mains." }
+};
+
+/* ---------- DONNÉES : DÉDUCTIONS ---------- */
+const DED_G = {
+  d1:{ titre:"Déduction n°1", besoin:["billesfroides","t_sylvain"],
+    question:"Sylvain a vu un « spectre » et senti un froid brumeux. D'où venait ce froid ?",
+    resume:"Le « spectre de givre » n'est qu'un brouillard de billes glacées qui fument et disparaissent. Les spectres n'existent pas !",
+    options:[
+      { t:"C'était un vrai spectre de givre.", ok:false, r:"Bro claque des dents. Clever sourit : regarde bien les petites billes trouvées par terre. Que font-elles dans ta main ?" },
+      { t:"Des billes glacées qui fument et répandent un froid brumeux.", ok:true, r:"Exactement ! Ces billes font une fumée froide puis disparaissent. Voilà notre « brume de spectre » : un simple truc." },
+      { t:"Il avait laissé la porte du congélateur ouverte.", ok:false, r:"Bro adore l'idée. Clever : la vraie réponse est plus maligne... et elle est par terre, dans le carnet." }
+    ] },
+  d2:{ titre:"Déduction n°2", besoin:["passerelle","empreintegivre","t_sylvain"],
+    question:"La serre était fermée à clé et rien n'est cassé. Comment a-t-il atteint l'Orchidée ?",
+    resume:"Le voleur a traversé la fine passerelle de verre au-dessus du bassin sans la fêler : il est très LÉGER. Barnabé l'ours l'aurait brisée → il est innocent.",
+    options:[
+      { t:"En sautant par-dessus le bassin.", ok:false, r:"Trop large pour sauter ! Et il y a une petite empreinte, là, sur la passerelle givrée..." },
+      { t:"En brisant une vitre de la serre.", ok:false, r:"Clever secoue la tête : rien n'est cassé. Regarde plutôt la passerelle de verre : intacte, avec une empreinte minuscule." },
+      { t:"Par la passerelle de verre, sans la fêler : un animal très léger.", ok:true, r:"Bravo ! Cette fine passerelle aurait cédé sous un poids lourd. Barnabé l'ours ? Bien trop lourd : rayé de la liste !" }
+    ], apres(){ S.suspects.barnabe="non"; S.raisons.barnabe="Bien trop lourd : il aurait brisé la fine passerelle de verre, restée intacte."; } },
+  d3:{ titre:"Déduction n°3", besoin:["deuxmains","t_nocto"],
+    question:"Après le vol, comment le « spectre » s'est-il enfui de la serre ?",
+    resume:"Le voleur a grimpé le palmier et noué une corde à DEUX mains. Pin-Pon a un bras en écharpe → il est innocent.",
+    options:[
+      { t:"Il s'est envolé par la verrière.", ok:false, r:"Nocto est formelle : il a GRIMPÉ, pas volé. Et regarde le tronc : deux empreintes de mains bien nettes." },
+      { t:"Il a grimpé et noué une corde à deux mains.", ok:true, r:"Oui ! Les deux empreintes + la corde nouée + le récit de Nocto : il lui fallait ses deux mains. Pin-Pon, le bras en écharpe, ne pouvait pas : rayé !" },
+      { t:"Il a creusé un tunnel.", ok:false, r:"Bro adorerait, mais aucun trou nulle part. Et pourquoi deux empreintes de mains tout en haut du palmier, alors ?" }
+    ], apres(){ S.suspects.pinpon="non"; S.raisons.pinpon="Le bras en écharpe : impossible de grimper et de nouer une corde à deux mains."; } },
+  d4:{ titre:"Déduction n°4", besoin:["limefine","loquerayures"],
+    question:"La cloche de verre n'était pas cassée. Comment a-t-elle été ouverte ?",
+    resume:"La cloche a été ouverte avec la lime fine achetée chez Gustave : c'est elle qui a laissé les fines rayures sur le loquet.",
+    options:[
+      { t:"Avec un sort de jardinier.", ok:false, r:"Clever lève un sourcil : « Les tours d'artiste, ce sont des outils. » Un outil très fin, par exemple..." },
+      { t:"Avec une pelle.", ok:false, r:"Une pelle aurait tout brisé ! Or le verre est intact. Souviens-toi des fines rayures sur le loquet..." },
+      { t:"Avec la lime fine, glissée dans le loquet.", ok:true, r:"Élémentaire ! Les fines rayures du loquet correspondent exactement à la lime fine vendue par Gustave." }
+    ] },
+  d5:{ titre:"La grande déduction", besoin:["brouillardpoudre","bulbes","limefine","affiche3"], besoinDed:["d1","d2","d3","d4"],
+    question:"Récapitulons : le voleur est minuscule et léger, il grimpe à deux mains, il fait des tours d'artiste, et il a acheté le Brouillard en poudre ET la lime. Alors... QUI est le Spectre de Givre ?",
+    resume:"Le Spectre de Givre est Filoue la Souris : légère (la passerelle), à deux mains agiles (le palmier), petite grimpeuse, acrobate — et cliente de Gustave.",
+    options:[
+      { t:"Barnabé l'Ours", ok:false, r:"Impossible : Barnabé est bien trop lourd pour la passerelle de verre (Déduction n°2)." },
+      { t:"Pin-Pon le Raton", ok:false, r:"Impossible : Pin-Pon a le bras en écharpe, il ne peut pas grimper à deux mains (Déduction n°3)." },
+      { t:"Filoue la Souris", ok:true, r:"C'est elle ! Légère → la passerelle. Deux mains → le palmier. Petite acrobate → les tours. Brouillard en poudre + lime → cliente de Gustave. Et son numéro du Spectre avait raté... Tout se recoupe !" }
+    ], apres(){ S.suspects.filoue="coupable"; } }
+};
+const ORD_G = ["d1","d2","d3","d4","d5"];
+
+/* ---------- DONNÉES : PREUVES ---------- */
+const PRV_G = [
+  { question:"« Tu faisais ce froid de spectre, Filoue, parce que tu avais répandu... »",
+    options:[
+      { t:"📜 ...le prospectus du Bazar.", ok:false, r:"Un papier ne gèle rien ! Cherche l'indice qui fait du FROID." },
+      { t:"🌫️ ...le Brouillard en poudre, acheté chez Gustave.", ok:true, r:"Filoue frissonne : quelques billes fument encore au fond de sa poche..." },
+      { t:"🧅 ...une poignée de bulbes.", ok:false, r:"Des bulbes ne gèlent rien du tout ! Quel indice fait ce froid brumeux ?" }
+    ]},
+  { question:"« Tu as traversé la passerelle de verre, où tu as laissé... »",
+    options:[
+      { t:"🎪 ...l'affiche du Concours.", ok:false, r:"L'affiche était au Bazar, pas sur la passerelle ! Qu'as-tu laissé dans le givre ?" },
+      { t:"🪚 ...la lime fine.", ok:false, r:"Non, la lime a servi ailleurs... Quelle petite trace as-tu laissée sur la passerelle givrée ?" },
+      { t:"🐾 ...une empreinte de patte toute légère.", ok:true, r:"Filoue rougit : « Je suis passée sur la pointe des pattes, promis... »" }
+    ]},
+  { question:"« Et tu as ouvert la cloche de verre sans la casser grâce à... »",
+    options:[
+      { t:"🧅 ...une poignée de bulbes.", ok:false, r:"Les bulbes, c'était pour payer Gustave ! Quel outil fin ouvre les loquets ?" },
+      { t:"🪚 ...la lime fine, glissée dans le loquet.", ok:true, r:"« La lime... » souffle Filoue. « Comment avez-vous deviné ?! » Clever tapote son carnet." },
+      { t:"🌫️ ...le Brouillard en poudre.", ok:false, r:"Le brouillard fait du froid, il n'ouvre rien du tout ! Quel outil laisse de fines rayures sur un loquet ?" }
+    ]}
+];
+
+/* ---------- MÉTA-LIEUX ---------- */
+const LIEUX_G = {
+  serre:{ nom:"La Grande Serre", indices:["t_sylvain","loquerayures","billesfroides","passerelle","empreintegivre"], deds:["d1","d2"] },
+  bosquet:{ nom:"Le Bosquet", indices:["t_nocto","deuxmains","prospectus3"], deds:["d3"] },
+  bazar:{ nom:"Le Bazar d'Hiver", indices:["brouillardpoudre","bulbes","limefine","affiche3"], deds:["d4","d5"] },
+  kiosque:{ nom:"Le Kiosque à Musique", indices:[], deds:[] }
+};
+
+/* ---------- ART : LES SCÈNES ---------- */
+function artTitre_G(){
+  return `<svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <defs><linearGradient id="cielTG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12324a"/><stop offset="1" stop-color="#081820"/></linearGradient></defs>
+  <rect width="960" height="540" fill="url(#cielTG)"/>
+  ${etoiles()} ${lune(160,100,48)}
+  <rect x="0" y="418" width="960" height="122" fill="#0e2a1e"/>
+  <path d="M300 420 L300 300 Q480 208 660 300 L660 420 Z" fill="rgba(150,220,200,.16)" stroke="#2b6f5c" stroke-width="6"/>
+  <line x1="480" y1="214" x2="480" y2="420" stroke="#2b6f5c" stroke-width="3" opacity=".5"/>
+  <line x1="392" y1="250" x2="392" y2="420" stroke="#2b6f5c" stroke-width="2" opacity=".4"/>
+  <line x1="568" y1="250" x2="568" y2="420" stroke="#2b6f5c" stroke-width="2" opacity=".4"/>
+  <line x1="300" y1="360" x2="660" y2="360" stroke="#2b6f5c" stroke-width="2" opacity=".4"/>
+  ${brume()}
+  <g opacity=".92">
+    <ellipse cx="500" cy="252" rx="66" ry="78" fill="rgba(200,230,225,.18)"/>
+    <path d="M462 252 Q462 202 500 202 Q538 202 538 252 L538 300 L528 290 L518 302 L508 290 L500 300 L492 290 L482 302 L472 290 L462 300 Z" fill="rgba(220,240,238,.82)"/>
+    <circle cx="486" cy="246" r="5" fill="#1b2144"/><circle cx="514" cy="246" r="5" fill="#1b2144"/>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -12; 0 0" dur="3s" repeatCount="indefinite"/>
+  </g>
+  <g><ellipse cx="150" cy="415" rx="26" ry="20" fill="#08130f"/><circle cx="150" cy="392" r="16" fill="#08130f"/>
+    <circle cx="139" cy="381" r="6" fill="#08130f"/><circle cx="161" cy="381" r="6" fill="#08130f"/>
+    <circle cx="176" cy="398" r="9" fill="none" stroke="#ffc857" stroke-width="3.5"/><line x1="182" y1="405" x2="190" y2="414" stroke="#ffc857" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="197" cy="420" rx="17" ry="14" fill="#08130f"/><circle cx="197" cy="404" r="11" fill="#08130f"/>
+    <circle cx="190" cy="396" r="4.5" fill="#08130f"/><circle cx="204" cy="396" r="4.5" fill="#08130f"/></g>
+  </svg>`;
+}
+function artQG_G(avecMcflare){
+  return `<svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <rect width="960" height="540" fill="#3a2a26"/>
+  ${Array.from({length:7},(_,r)=>Array.from({length:9},(_,c)=>`<rect x="${c*112+(r%2?56:0)-56}" y="${r*66+10}" width="106" height="60" rx="4" fill="#4a342c" stroke="#32241f" stroke-width="4"/>`).join("")).join("")}
+  <rect x="290" y="80" width="380" height="230" rx="10" fill="#8a6a42" stroke="#6b4f2e" stroke-width="8"/>
+  <rect x="330" y="110" width="90" height="105" rx="6" fill="#fff6e3"/><g transform="translate(345,118) scale(.6)">${PORTRAITS.barnabe.replace(/<\/?svg[^>]*>/g,"")}</g>
+  <rect x="435" y="120" width="90" height="105" rx="6" fill="#fff6e3" transform="rotate(3 480 172)"/><g transform="translate(452,131) scale(.6) rotate(3)">${PORTRAITS.pinpon.replace(/<\/?svg[^>]*>/g,"")}</g>
+  <rect x="540" y="112" width="90" height="105" rx="6" fill="#fff6e3" transform="rotate(-2 585 164)"/><g transform="translate(555,121) scale(.6)">${PORTRAITS.filoue.replace(/<\/?svg[^>]*>/g,"")}</g>
+  <path d="M375 160 L480 250 L585 160" fill="none" stroke="#ef6351" stroke-width="3"/><circle cx="480" cy="250" r="8" fill="#ef6351"/>
+  <text x="480" y="98" text-anchor="middle" font-family="var(--f-titre)" font-size="20" fill="#fff6e3">LES SUSPECTS</text>
+  <rect x="0" y="420" width="960" height="120" fill="#5e4430"/><rect x="0" y="412" width="960" height="14" rx="4" fill="#6e5138"/>
+  <ellipse cx="200" cy="400" rx="105" ry="60" fill="rgba(142,240,192,.12)"/>
+  <path d="M160 410 L240 410 L225 380 L175 380 Z" fill="#2fbf72"/><rect x="194" y="410" width="12" height="24" fill="#c9a227"/><rect x="182" y="432" width="36" height="8" rx="4" fill="#c9a227"/>
+  <circle cx="700" cy="415" r="22" fill="none" stroke="#ffc857" stroke-width="7"/><line x1="715" y1="431" x2="737" y2="452" stroke="#ffc857" stroke-width="9" stroke-linecap="round"/>
+  ${avecMcflare?`<g transform="translate(60,250)"><ellipse cx="60" cy="130" rx="52" ry="62" fill="#8d93a5"/><g><circle cx="70" cy="60" r="44" fill="#8d93a5"/><path d="M40 42 Q70 22 100 42 L96 32 Q70 16 44 32Z" fill="#27407a"/><rect x="38" y="40" width="64" height="9" rx="4" fill="#1c2f5c"/><circle cx="70" cy="45" r="5" fill="#ffc857"/><circle cx="58" cy="58" r="5" fill="#2b2340"/><circle cx="82" cy="58" r="5" fill="#2b2340"/><path d="M50 52 q8 -5 14 0 M76 52 q8 -5 14 0" stroke="#5f6472" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="70" cy="70" rx="6" ry="4.5" fill="#2b2340"/><path d="M56 76 Q70 96 84 76 Q76 84 70 84 Q64 84 56 76Z" fill="#6b7181"/></g></g>`:""}
+  </svg>`;
+}
+function artIntro1_G(){
+  return `<svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <rect width="960" height="540" fill="#0e2436"/>
+  <rect x="0" y="0" width="960" height="356" fill="#12324a"/>
+  <path d="M120 356 L120 150 Q480 40 840 150 L840 356 Z" fill="rgba(120,190,175,.18)" stroke="#2b6f5c" stroke-width="8"/>
+  <line x1="480" y1="60" x2="480" y2="356" stroke="#2b6f5c" stroke-width="3" opacity=".4"/>
+  <line x1="300" y1="120" x2="300" y2="356" stroke="#2b6f5c" stroke-width="2" opacity=".3"/>
+  <line x1="660" y1="120" x2="660" y2="356" stroke="#2b6f5c" stroke-width="2" opacity=".3"/>
+  <rect x="0" y="356" width="960" height="184" fill="#0b2a1e"/>
+  <rect x="410" y="330" width="140" height="80" rx="8" fill="#123a2a" stroke="#2b6f5c" stroke-width="4"/>
+  <path d="M480 330 L476 286 L484 286 Z" fill="#3a7a4a"/>
+  <g><path d="M480 250 Q462 264 462 282 Q480 278 480 262 Q480 278 498 282 Q498 264 480 250Z" fill="#ffc857"/>
+    <ellipse cx="480" cy="284" rx="16" ry="12" fill="#f4d35e"/><circle cx="480" cy="284" r="5" fill="#e0a52e"/>
+    <circle cx="480" cy="272" r="40" fill="none" stroke="#ffe08a" stroke-width="3" opacity=".4"/></g>
+  <text x="480" y="48" text-anchor="middle" font-family="var(--f-titre)" font-size="24" fill="#ffe08a">✦ L'ORCHIDÉE D'OR ✦</text>
+  </svg>`;
+}
+function artIntro2_G(){
+  return `<svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <rect width="960" height="540" fill="#081820"/>
+  <rect x="0" y="0" width="960" height="356" fill="#0e2a2e"/>
+  <rect x="0" y="356" width="960" height="184" fill="#08201a"/>
+  ${brume()}
+  <ellipse cx="500" cy="330" rx="300" ry="60" fill="rgba(200,230,225,.14)"/>
+  <g>
+    <ellipse cx="520" cy="230" rx="70" ry="86" fill="rgba(200,230,225,.2)"/>
+    <path d="M478 230 Q478 176 520 176 Q562 176 562 230 L562 288 L550 276 L538 290 L526 276 L520 288 L512 276 L500 290 L488 276 L478 288 Z" fill="rgba(224,242,240,.85)"/>
+    <circle cx="504" cy="222" r="6" fill="#1b2144"/><circle cx="536" cy="222" r="6" fill="#1b2144"/>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -14; 0 0" dur="2.6s" repeatCount="indefinite"/>
+  </g>
+  <g transform="translate(180,356)">
+    <path d="M0 40 L-8 20 L6 30 L4 12 L16 22 Z" fill="#5a3a24"/>
+    <ellipse cx="0" cy="72" rx="26" ry="22" fill="#d8ab72"/>
+    <circle cx="-8" cy="68" r="4.5" fill="#2b2340"/><circle cx="8" cy="68" r="4.5" fill="#2b2340"/>
+    <ellipse cx="0" cy="78" rx="5" ry="4" fill="#2b2340"/>
+    <animateTransform attributeName="transform" type="translate" values="180 356; 176 356; 184 356; 180 356" dur=".4s" repeatCount="indefinite"/>
+  </g>
+  <text x="500" y="52" text-anchor="middle" font-family="var(--f-titre)" font-size="26" fill="#dfeef0">« UN SPECTRE ! »</text>
+  </svg>`;
+}
+function artCarte_G(){
+  const etatN = id => S.lieux[id];
+  function noeud(id, x, y, label, icone){
+    const etat = etatN(id), complet = lieuComplet(id);
+    const nouveau = etat==="ouvert" && !S.faits["entree_"+id] && !complet;
+    if(etat==="verrou"){
+      return `<g class="lieu-carte verrou"><circle cx="${x}" cy="${y}" r="42" fill="#123a2a" stroke="#1c4a38" stroke-width="5"/>
+      <text x="${x}" y="${y+10}" text-anchor="middle" font-size="30">🔒</text>
+      <text class="etiquette" x="${x}" y="${y+72}">???</text></g>`;
+    }
+    return `<g class="lieu-carte" onclick="allerLieu('${id}')">
+      ${nouveau?`<circle class="nouveau" cx="${x}" cy="${y}" r="52" fill="none" stroke="#ffc857" stroke-width="5" opacity=".9"/>`:""}
+      <circle cx="${x}" cy="${y}" r="42" class="medaillon" fill="#1c5040" stroke="${complet?"#2fbf72":"#ffc857"}" stroke-width="5"/>
+      <g transform="translate(${x},${y})">${icone}</g>
+      ${complet?`<circle cx="${x+32}" cy="${y-30}" r="15" fill="#2fbf72"/><text x="${x+32}" y="${y-24}" text-anchor="middle" font-size="17" fill="#fff">✓</text>`:""}
+      <text class="etiquette" x="${x}" y="${y+72}">${label}</text></g>`;
+  }
+  const icoSerre = `<path d="M-22 16 L-22 -6 Q0 -20 22 -6 L22 16Z" fill="rgba(142,240,200,.5)" stroke="#8ef0c0" stroke-width="3"/><line x1="0" y1="-16" x2="0" y2="16" stroke="#8ef0c0" stroke-width="2"/>`;
+  const icoBosquet = `<rect x="-4" y="0" width="8" height="18" fill="#6a4a2f"/><circle cx="0" cy="-6" r="14" fill="#3fae5a"/><circle cx="-10" cy="2" r="9" fill="#2f8a44"/><circle cx="10" cy="2" r="9" fill="#2f8a44"/>`;
+  const icoBazar = `<path d="M-24 16 L-24 -6 L0 -22 L24 -6 L24 16Z" fill="#5a3a6a"/><rect x="-27" y="-8" width="54" height="8" rx="4" fill="#7b3fbf"/><circle cx="0" cy="-10" r="4" fill="#ffc857"/>`;
+  const icoKiosque = `<path d="M-24 -6 L0 -22 L24 -6 Z" fill="#c0392b"/><rect x="-20" y="-6" width="40" height="22" fill="#e8dcc0"/><rect x="-20" y="16" width="40" height="4" fill="#8a6a42"/><line x1="-12" y1="-6" x2="-12" y2="16" stroke="#c9a227" stroke-width="3"/><line x1="12" y1="-6" x2="12" y2="16" stroke="#c9a227" stroke-width="3"/>`;
+  const icoHome = `<rect x="-24" y="-4" width="48" height="24" rx="4" fill="#e8d3b0"/><path d="M-28 -4 L28 -4 L22 -16 L-22 -16 Z" fill="#2fbf72"/><rect x="-8" y="2" width="16" height="18" rx="2" fill="#6b4f2e"/>`;
+  return `<svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <defs><linearGradient id="cielCG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#173a44"/><stop offset="1" stop-color="#08181a"/></linearGradient></defs>
+  <rect width="960" height="540" fill="url(#cielCG)"/>
+  ${etoiles()} ${lune(880,70,38)}
+  <path d="M0 470 Q240 440 480 460 T960 440 L960 540 L0 540Z" fill="#0e2a1e"/>
+  <path d="M0 300 Q240 340 480 305 T960 330" fill="none" stroke="#1c4a38" stroke-width="4" opacity=".5"/>
+  ${brume()}
+  <path d="M150 420 C 260 350 300 300 330 250 C 380 205 440 195 500 195 C 590 190 660 230 700 270 C 730 300 650 360 590 400" fill="none" stroke="#8ef0c0" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 18" opacity=".5">
+    <animate attributeName="stroke-dashoffset" from="190" to="0" dur="8s" repeatCount="indefinite"/></path>
+  ${noeud("kiosque",590,400,"Le Kiosque",icoKiosque)}
+  ${noeud("bazar",700,260,"Bazar d'Hiver",icoBazar)}
+  ${noeud("bosquet",500,195,"Le Bosquet",icoBosquet)}
+  ${noeud("serre",330,250,"La Grande Serre",icoSerre)}
+  <g class="lieu-carte" onclick="toucher('maison')">
+    <circle cx="150" cy="420" r="42" fill="#1c5040" stroke="#8a93c8" stroke-width="4"/>
+    <g transform="translate(150,420)">${icoHome}</g>
+    <text class="etiquette" x="150" y="492">Mystery Lane (QG)</text></g>
+  </svg>`;
+}
+function artSerre_G(){
+  return `<svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <rect width="960" height="540" fill="#0e2436"/>
+  <rect x="0" y="0" width="960" height="356" fill="#123a34"/>
+  <path d="M40 356 L40 120 Q480 30 920 120 L920 356 Z" fill="rgba(120,190,175,.14)" stroke="#2b6f5c" stroke-width="8"/>
+  <line x1="480" y1="46" x2="480" y2="356" stroke="#2b6f5c" stroke-width="3" opacity=".35"/>
+  ${[220,340,620,740].map(x=>`<line x1="${x}" y1="90" x2="${x}" y2="356" stroke="#2b6f5c" stroke-width="2" opacity=".28"/>`).join("")}
+  <rect x="0" y="356" width="960" height="184" fill="#0b2a1e"/>
+  ${[120,300,640,820].map((x,i)=>`<g transform="translate(${x},300)"><rect x="-6" y="0" width="12" height="56" fill="#5a3f2a"/><circle cx="0" cy="-8" r="${20+ (i%2)*6}" fill="${i%2?"#2f8a44":"#3fae5a"}"/></g>`).join("")}
+  <rect x="410" y="300" width="140" height="90" rx="8" fill="#123a2a" stroke="#2b6f5c" stroke-width="4"/>
+  <rect x="440" y="196" width="80" height="106" rx="30" fill="rgba(190,233,220,.16)" stroke="#bfeadf" stroke-width="4"/>
+  <path d="M480 262 Q466 274 466 288 Q480 284 480 272 Q480 284 494 288 Q494 274 480 262Z" fill="#ffc857"/><ellipse cx="480" cy="290" rx="12" ry="9" fill="#f4d35e"/>
+  <path d="M120 470 L520 470 L500 452 L140 452 Z" fill="rgba(190,220,235,.28)"/>
+  <ellipse cx="320" cy="500" rx="220" ry="30" fill="#14324a"/>
+  ${[[200,496],[300,504],[420,498]].map(p=>`<ellipse cx="${p[0]}" cy="${p[1]}" rx="26" ry="9" fill="#2f8a54"/>`).join("")}
+  <line x1="150" y1="452" x2="490" y2="452" stroke="#bfeadf" stroke-width="4" opacity=".6"/>
+  <g>${brume()}<ellipse cx="740" cy="474" rx="60" ry="18" fill="rgba(210,235,235,.5)"/>${[[710,468],[770,478],[740,458]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#eaf6f4"/>`).join("")}</g>
+  <g transform="translate(180,356)">
+    <path d="M0 40 L-10 18 L6 30 L4 10 L18 22 L14 4 L26 18 Z" fill="#5a3f2a"/>
+    <ellipse cx="0" cy="70" rx="30" ry="26" fill="#d8ab72"/>
+    <circle cx="-10" cy="66" r="5" fill="#2b2340"/><circle cx="10" cy="66" r="5" fill="#2b2340"/>
+    <ellipse cx="0" cy="76" rx="6" ry="4.5" fill="#2b2340"/>
+    <path d="M-30 96 q30 -12 60 0" stroke="#3fae5a" stroke-width="6" fill="none" stroke-linecap="round"/>
+  </g>
+  ${hotspot("sylvain", 180, 356, "", "Sylvain", 56)}
+  ${hotspot("cloche", 480, 250, "", "L'Orchidée", 62)}
+  ${hotspot("billes", 740, 474, "", "Billes qui fument", 46)}
+  ${hotspot("passerelle", 320, 456, "", "La passerelle", 50)}
+  </svg>`;
+}
+function artBosquet_G(){
+  return `<svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <rect width="960" height="540" fill="#0a1c1a"/>
+  ${etoiles()}
+  <rect x="0" y="0" width="960" height="300" fill="#0e2622"/>
+  ${brume()}
+  <rect x="0" y="410" width="960" height="130" fill="#123021"/>
+  ${[120,340,560,860].map(x=>`<g transform="translate(${x},260)"><rect x="-10" y="0" width="20" height="160" fill="#3a2a1c"/><circle cx="0" cy="-16" r="48" fill="#1c4a2e"/><circle cx="-30" cy="6" r="30" fill="#173d26"/><circle cx="30" cy="6" r="30" fill="#173d26"/></g>`).join("")}
+  <g transform="translate(720,150)"><rect x="-14" y="0" width="28" height="270" fill="#6a4a2f"/>${[0,1,2,3].map(i=>`<path d="M-14 ${i*60+20} q-20 -14 -30 -4 M14 ${i*60+40} q20 -14 30 -4" stroke="#5a3a22" stroke-width="4" fill="none"/>`).join("")}<path d="M0 0 Q-40 -30 -70 -10 M0 0 Q40 -34 74 -8 M0 0 Q-10 -40 -30 -50 M0 0 Q20 -40 44 -46" stroke="#2f8a44" stroke-width="10" fill="none" stroke-linecap="round"/></g>
+  <path d="M706 150 Q690 260 700 410" stroke="#c9a227" stroke-width="3" fill="none" opacity=".8"/>
+  ${[[706,180],[703,240],[702,320]].map(p=>`<ellipse cx="${p[0]}" cy="${p[1]}" rx="5" ry="7" fill="#f4efe0" opacity=".8"/>`).join("")}
+  <g transform="translate(280,150)"><ellipse cx="0" cy="12" rx="20" ry="18" fill="#7a6a52"/><circle cx="2" cy="-6" r="14" fill="#8a7a60"/>
+    <circle cx="-4" cy="-6" r="6" fill="#f4efe0"/><circle cx="8" cy="-6" r="6" fill="#f4efe0"/>
+    <circle cx="-4" cy="-6" r="3" fill="#f4a52e"/><circle cx="8" cy="-6" r="3" fill="#f4a52e"/>
+    <circle cx="-4" cy="-6" r="1.4" fill="#1b2144"/><circle cx="8" cy="-6" r="1.4" fill="#1b2144"/>
+    <path d="M2 -1 l-3 4 h6 z" fill="#f4a52e"/></g>
+  <rect x="260" y="120" width="44" height="10" rx="4" fill="#3a2a1c"/>
+  <g transform="translate(520,440)"><ellipse cx="0" cy="18" rx="70" ry="20" fill="#2f5a2a"/>${[[-40,6],[0,-2],[44,8],[-14,14],[20,16]].map(p=>`<path d="M${p[0]} ${p[1]} q10 -14 22 -4 q-4 10 -16 10 q-10 -2 -6 -6z" fill="#3a6a2e"/>`).join("")}</g>
+  ${hotspot("nocto", 282, 150, "", "Nocto", 42)}
+  ${hotspot("palmier", 720, 290, "", "Le palmier", 54)}
+  ${hotspot("feuilles", 520, 442, "", "Tas de feuilles", 56)}
+  </svg>`;
+}
+function artBazar_G(){
+  return `<svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <rect width="960" height="540" fill="#221830"/>
+  <rect x="0" y="0" width="960" height="70" fill="#181022"/>
+  ${[0,1,2,3,4,5,6,7,8].map(i=>`<path d="M${60+i*100} 70 l3 6 7 .8 -5 4.8 1.3 7 -6.3-3.5 -6.3 3.5 1.3-7 -5-4.8 7-.8z" fill="#8ef0c0" opacity=".65"/>`).join("")}
+  <rect x="60" y="140" width="360" height="14" rx="6" fill="#3a2a20"/>
+  ${[[90,100],[160,110],[230,96],[300,108],[360,100]].map((p,i)=>`<ellipse cx="${p[0]+13}" cy="${p[1]+30}" rx="13" ry="16" fill="${["#c86ad0","#ef6351","#f4d35e","#8ef0c0","#4a9de0"][i]}" opacity=".85"/><rect x="${p[0]+7}" y="${p[1]+2}" width="12" height="8" rx="2" fill="#7a5a42"/>`).join("")}
+  <rect x="60" y="250" width="360" height="14" rx="6" fill="#3a2a20"/>
+  ${[[100,222],[180,230],[260,216],[340,226]].map((p,i)=>`<circle cx="${p[0]+12}" cy="${p[1]+22}" r="${248-p[1]}" fill="${["#e8e6de","#dfeef0","#e8e6de","#dfeef0"][i]}" opacity=".7"/>`).join("")}
+  <rect x="700" y="120" width="200" height="250" rx="10" fill="#f4e8cc" stroke="#c9a227" stroke-width="6" transform="rotate(2 800 245)"/>
+  <text x="800" y="165" text-anchor="middle" font-family="var(--f-titre)" font-size="19" fill="#3f6f4f" transform="rotate(2 800 245)">CONCOURS</text>
+  <text x="800" y="188" text-anchor="middle" font-family="var(--f-titre)" font-size="14" fill="#8a6a4a" transform="rotate(2 800 245)">des Jardiniers</text>
+  <g transform="rotate(2 800 245)">
+    <circle cx="745" cy="240" r="26" fill="#8a5a38"/><circle cx="737" cy="228" r="7" fill="#b98a5a"/><circle cx="753" cy="228" r="7" fill="#b98a5a"/>
+    <circle cx="800" cy="240" r="26" fill="#9aa0ac"/><path d="M786 236 Q800 230 814 236" stroke="#2b2340" stroke-width="6" fill="none"/>
+    <circle cx="855" cy="240" r="26" fill="#c8c2ce"/><circle cx="845" cy="230" r="7" fill="#f6c9de"/><circle cx="865" cy="230" r="7" fill="#f6c9de"/>
+    <text x="800" y="300" text-anchor="middle" font-size="14" fill="#3f6f4f" font-family="var(--f-texte)">Barnabé · Pin-Pon · Filoue</text>
+    <text x="800" y="330" text-anchor="middle" font-size="13" fill="#9c4a3c" font-family="var(--f-texte)" font-style="italic">« Le numéro du Spectre a raté... »</text>
+  </g>
+  <rect x="0" y="420" width="960" height="120" fill="#1c1428"/>
+  <rect x="270" y="330" width="420" height="110" rx="10" fill="#4a3320"/><rect x="262" y="322" width="436" height="18" rx="9" fill="#5e4028"/>
+  <g transform="translate(480,262)">
+    <ellipse cx="0" cy="16" rx="40" ry="34" fill="#e8e6de"/>
+    <circle cx="-24" cy="-12" r="12" fill="#3a3a44"/><circle cx="24" cy="-12" r="12" fill="#3a3a44"/><circle cx="-24" cy="-12" r="5" fill="#e8e6de"/><circle cx="24" cy="-12" r="5" fill="#e8e6de"/>
+    <path d="M-10 -14 Q-18 20 -12 44 L-6 44 Q-10 18 -4 -12 Z" fill="#3a3a44"/><path d="M10 -14 Q18 20 12 44 L6 44 Q10 18 4 -12 Z" fill="#3a3a44"/>
+    <circle cx="-13" cy="8" r="5" fill="#2b2340"/><circle cx="13" cy="8" r="5" fill="#2b2340"/>
+    <ellipse cx="0" cy="22" rx="6" ry="4.5" fill="#2b2340"/>
+    <path d="M-8 30 Q0 35 8 30" stroke="#8a5a3a" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>
+  ${hotspot("gustave", 480, 280, "", "Gustave", 62)}
+  ${hotspot("affiche", 800, 245, "", "L'affiche", 66)}
+  </svg>`;
+}
+function artKiosque_G(opts={}){
+  return `<svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <rect width="960" height="540" fill="#0a1c22"/>
+  ${etoiles()} ${lune(820,90,40)}
+  <rect x="0" y="410" width="960" height="130" fill="#123021"/>
+  ${brume()}
+  <g>
+    <path d="M200 150 L480 70 L760 150 Z" fill="#8a1f2e"/><path d="M200 150 L480 92 L760 150 L720 150 L480 104 L240 150 Z" fill="#c0392b"/>
+    <rect x="230" y="150" width="500" height="16" fill="#e8dcc0"/>
+    <rect x="250" y="166" width="16" height="240" fill="#d8ccb0"/><rect x="694" y="166" width="16" height="240" fill="#d8ccb0"/>
+    <rect x="200" y="404" width="560" height="18" rx="6" fill="#8a6a42"/>
+    ${[320,420,560,640].map(x=>`<line x1="${x}" y1="166" x2="${x}" y2="404" stroke="#c9a227" stroke-width="4" opacity=".5"/>`).join("")}
+  </g>
+  <line x1="180" y1="230" x2="780" y2="250" stroke="#c8b89a" stroke-width="3"/>
+  <g transform="translate(120,360)"><ellipse cx="0" cy="40" rx="46" ry="12" fill="#0a2015"/><path d="M-30 40 L-40 0 L30 0 L40 40 Z" fill="#5a3f2a"/><circle cx="-30" cy="0" r="18" fill="#3a2a1c"/><rect x="-40" y="-6" width="70" height="16" rx="6" fill="#6a4a2f"/><path d="M20 6 L38 -2 L34 12 L48 8 L40 22 Z" fill="#6a4a30"/></g>
+  <g transform="translate(760,388)"><ellipse cx="0" cy="14" rx="24" ry="7" fill="#0a2015"/><path d="M-20 -30 Q-30 0 -14 14 Q0 20 14 14 Q30 0 20 -30" fill="none" stroke="#2b6f5c" stroke-width="6"/></g>
+  ${opts.sansFiloue?"":`<g transform="translate(480,214)">
+    <circle cx="-20" cy="-14" r="12" fill="#b8b0bc"/><circle cx="20" cy="-14" r="12" fill="#b8b0bc"/><circle cx="-20" cy="-14" r="6" fill="#f6c9de"/><circle cx="20" cy="-14" r="6" fill="#f6c9de"/>
+    <ellipse cx="0" cy="8" rx="24" ry="24" fill="#c8c2ce"/>
+    <circle cx="-9" cy="2" r="5" fill="#2b2340"/><circle cx="9" cy="2" r="5" fill="#2b2340"/>
+    <circle cx="-7.5" cy="0.5" r="1.5" fill="#fff"/><circle cx="10.5" cy="0.5" r="1.5" fill="#fff"/>
+    <ellipse cx="0" cy="12" rx="3.5" ry="2.6" fill="#d0607a"/>
+    <path d="M-24 20 Q-36 40 -30 56 M24 20 Q36 40 30 56" stroke="#c8c2ce" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M-24 8 q-20 -6 -40 6 M24 8 q20 -6 40 6" stroke="#c8c2ce" stroke-width="5" fill="none" stroke-linecap="round"/>
+  </g>`}
+  </svg>`;
+}
+function artFin_G(){
+  return `<svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+  <rect width="960" height="540" fill="#0e2436"/>
+  <rect x="0" y="0" width="960" height="356" fill="#123a34"/>
+  <path d="M40 356 L40 120 Q480 30 920 120 L920 356 Z" fill="rgba(120,190,175,.14)" stroke="#2b6f5c" stroke-width="8"/>
+  <line x1="480" y1="46" x2="480" y2="356" stroke="#2b6f5c" stroke-width="3" opacity=".35"/>
+  <rect x="0" y="356" width="960" height="184" fill="#0b2a1e"/>
+  <rect x="410" y="300" width="140" height="90" rx="8" fill="#123a2a" stroke="#2b6f5c" stroke-width="4"/>
+  <g><path d="M480 250 Q462 264 462 282 Q480 278 480 262 Q480 278 498 282 Q498 264 480 250Z" fill="#ffc857"/><ellipse cx="480" cy="284" rx="16" ry="12" fill="#f4d35e"/><circle cx="480" cy="284" r="5" fill="#e0a52e"/>
+    <circle cx="480" cy="272" r="44" fill="none" stroke="#ffe08a" stroke-width="3" opacity=".5"><animate attributeName="r" values="38;52;38" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;.1;.6" dur="2.2s" repeatCount="indefinite"/></circle></g>
+  ${[["#ef6351",120,90],["#8ef0c0",220,150],["#4a9de0",320,70],["#f4d35e",650,110],["#c86ad0",760,80],["#ef6351",850,160],["#8ef0c0",560,60],["#f4d35e",80,200]].map((c,i)=>
+    `<circle cx="${c[1]}" cy="${c[2]}" r="7" fill="${c[0]}" opacity=".9"><animateTransform attributeName="transform" type="translate" values="0 0; 0 ${30+i*6}" dur="${2+i*.2}s" repeatCount="indefinite" additive="sum"/></circle>`).join("")}
+  <text x="480" y="452" text-anchor="middle" font-family="var(--f-titre)" font-size="24" fill="#ffe08a">✦ L'ORCHIDÉE D'OR EST DE RETOUR ✦</text>
+  </svg>`;
+}
+
+/* ---------- PROGRESSION ---------- */
+function verif_G(){
+  if(S.deductions.d1 && S.deductions.d2 && !S.faits.versBosquet){
+    S.faits.versBosquet=true; S.lieux.bosquet="ouvert"; sauver();
+    dire([
+      {p:"mcflare", t:"Clever ! Nocto la chouette a vu quelque chose d'étrange cette nuit, dans le bosquet derrière la serre !"},
+      {p:"clever", t:"Un témoin de plus ? Parfait. Notre voleur a bien dû s'enfuir par là... Direction le bosquet !"}
+    ], ()=>{ toast("🗺️ Nouveau lieu : le Bosquet !"); allerCarte(); });
+    return true;
+  }
+  if(S.deductions.d3 && S.indices.includes("prospectus3") && !S.faits.versBazar){
+    S.faits.versBazar=true; S.lieux.bazar="ouvert"; sauver();
+    dire([
+      {p:"clever", t:"Récapitulons : un brouillard qui gèle... un voleur qui grimpe... et un prospectus du Bazar d'Hiver."},
+      {p:"bro", t:"Tous les chemins mènent chez Gustave !"}
+    ], ()=>{ toast("🗺️ Nouveau lieu : le Bazar d'Hiver !"); allerCarte(); });
+    return true;
+  }
+  if(S.deductions.d3 && !S.indices.includes("prospectus3") && !S.faits.astuceFeuilles){
+    S.faits.astuceFeuilles=true; sauver();
+    dire([{p:"clever", t:"Le voleur avait un fournisseur... mais lequel ? Il nous manque une piste. Fouillons encore le bosquet !"}]);
+    return true;
+  }
+  if(S.deductions.d5 && !S.faits.versKiosque){
+    S.faits.versKiosque=true; S.lieux.kiosque="ouvert"; sauver();
+    dire([
+      {p:"mcflare", t:"D'après mes informateurs, Filoue répète son numéro en ce moment même, au Kiosque à Musique."},
+      {p:"clever", t:"Alors le rideau de brume va se lever. En route pour le dernier acte !"}
+    ], ()=>{ toast("🗺️ Nouveau lieu : le Kiosque à Musique !"); allerCarte(); });
+    return true;
+  }
+  return false;
+}
+function briefing_G(){
+  S.ecran="lieu"; S.lieu=null; majUI();
+  montrer(`<div class="scene-svg">${artQG_G(true)}</div>`);
+  dire([
+    {p:"mcflare", t:"Clever ! L'Orchidée d'Or a disparu cette nuit de la Grande Serre. Serre fermée à clé, cloche de verre intacte... et un gardien qui parle d'un spectre de givre !"},
+    {p:"bro", t:"Un s-s-spectre ?! Chouette ! Euh... je veux dire : au secours."},
+    {p:"clever", t:"Les spectres n'existent pas, Bro. Mais les voleurs malins, si. McFlare : qui rêvait de cette Orchidée d'Or ?"},
+    {p:"mcflare", t:"Les trois finalistes du Concours des Jardiniers : Barnabé l'Ours, Pin-Pon le Raton et Filoue la Souris."},
+    {p:"clever", t:"Les voilà, nos suspects ! Je les note dans mon carnet. Direction la serre — et couvre-toi, Bro : il paraît qu'il y fait un froid de spectre."}
+  ], ()=>{ S.faits.brief=true; S.lieux.serre="ouvert"; carnetAlerte=true; sauver();
+    toast("📓 Trois suspects notés dans le carnet !"); allerCarte();
+    setTimeout(()=>toast("👆 Touche les endroits qui brillent pour enquêter !"),3400); });
+}
+const ENTREES_G = {
+  serre:[{p:"clever", t:"La Grande Serre... La scène du crime, et un froid à faire pousser des glaçons. Cherchons partout, Bro : touche les endroits qui brillent."},
+         {p:"bro", t:"Les endroits qui brillent ! Compris, chef !"}],
+  bosquet:[{p:"clever", t:"Le bosquet, derrière la serre. C'est par ici que notre « spectre » a filé... Ouvre l'œil."}],
+  bazar:[{p:"bro", t:"Ouah... un bazar plein de trucs D'HIVER ! Je peux toucher ? Dis, je peux toucher ?"},
+         {p:"clever", t:"Tu peux SURTOUT m'aider à interroger Gustave."}]
+};
+function toucher_G(id){
+  if(id==="maison"){
+    dire([{p:"bro", t:"On rentre déjà ? J'ai laissé mon écharpe au QG..."},
+          {p:"clever", t:"L'écharpe attendra, Bro. Une enquête nous attend !"}]);
+    return;
+  }
+  /* --- serre --- */
+  if(id==="sylvain"){
+    dire([
+      {p:"sylvain", t:"B-b-bonsoir, détective... Je suis Sylvain, le gardien-jardinier. Cette nuit, un spectre de givre a glissé entre mes plantes, un froid partout !"},
+      {p:"bro", t:"Il a fait « brrrouh » ?"},
+      {p:"sylvain", t:"Il a fait un FROID terrible ! Et je le jure : la serre est restée fermée à clé toute la nuit !"},
+      {p:"clever", t:"Intéressant... Un spectre qui gèle et qui n'utilise pas la porte. Je note tout ça."}
+    ], ()=>{ ajouterIndice("t_sylvain"); marque("h_sylvain"); });
+    return;
+  }
+  if(id==="cloche"){
+    dire([
+      {p:"clever", t:"La cloche de verre de l'Orchidée d'Or... Le verre n'est pas cassé. Et regarde : le petit loquet porte de fines rayures."},
+      {p:"clever", t:"Quelqu'un l'a ouvert avec un outil très, très fin. Ce n'est pas l'œuvre d'un spectre, ça."}
+    ], ()=>{ ajouterIndice("loquerayures"); marque("h_cloche"); });
+    return;
+  }
+  if(id==="billes"){
+    dire([
+      {p:"clever", t:"De drôles de billes blanches, par terre ! Elles fument... et elles font un froid glacial. J'en prends une, et... elle DISPARAÎT dans ma main !"},
+      {p:"bro", t:"Ouah ! De la crotte de spectre !"},
+      {p:"clever", t:"Hmm. Ou quelque chose de beaucoup moins fantomatique..."}
+    ], ()=>{ ajouterIndice("billesfroides"); marque("h_billes"); });
+    return;
+  }
+  if(id==="passerelle"){
+    if(S.faits.h_passerelle){
+      dire([{p:"clever", t:"La passerelle de verre où Bro a repéré la petite empreinte. Tout est dans le carnet."}]);
+      return;
+    }
+    dire([
+      {p:"clever", t:"Cette fine passerelle de verre, au-dessus du bassin gelé... Elle est intacte. Il faudrait la traverser sans la briser. Bro ?"},
+      {p:"bro", t:"Mission acceptée ! Je suis léger comme une plume. Comment je fais, chef ?"}
+    ], ()=>{
+      choisir({p:"clever", t:"À toi de choisir, Bro..."}, [
+        { t:"🤏 Sur la pointe des pattes !", fn:()=>mission_G([{p:"bro", t:"Chuuut... tout doux..."},{p:"recit", t:"Bro traverse sur la pointe des pattes, sans un craquement !"}]) },
+        { t:"🍃 En s'accrochant à une liane !", fn:()=>mission_G([{p:"recit", t:"Bro se balance d'une liane et se pose en douceur au milieu de la passerelle !"}]) },
+        { t:"🏃 En courant très vite !", fn:()=>mission_G([{p:"bro", t:"Plus je vais vite, moins j'appuie ! ...c'est de la science !"},{p:"recit", t:"Bro traverse à toute allure. La passerelle n'a pas bronché !"}]) }
+      ]);
+    });
+    return;
+  }
+  /* --- bosquet --- */
+  if(id==="nocto"){
+    dire([
+      {p:"nocto", t:"Hou-hou ! Je vois tout, la nuit. Et je vais vous dire un secret : ce spectre ne marchait pas normalement."},
+      {p:"nocto", t:"Il a GRIMPÉ le grand palmier, avec ses deux mains, il a noué une corde... puis il a filé vers le kiosque !"},
+      {p:"bro", t:"Un spectre alpiniste ? C'est louche."}
+    ], ()=>{ ajouterIndice("t_nocto"); marque("h_nocto"); });
+    return;
+  }
+  if(id==="palmier"){
+    dire([
+      {p:"clever", t:"Sur le tronc du palmier : deux empreintes de mains bien nettes. Et là-haut, une corde soigneusement nouée."},
+      {p:"clever", t:"Un nœud pareil, ça demande deux mains agiles. Notre « spectre » les a toutes les deux."}
+    ], ()=>{ ajouterIndice("deuxmains"); marque("h_palmier"); });
+    return;
+  }
+  if(id==="feuilles"){
+    dire([
+      {p:"bro", t:"Un tas de feuilles ! J'adore sauter dedans. Laisse-moi faire... Alors : un ver de terre... un gland... et... UN PAPIER !"},
+      {p:"clever", t:"« Bazar d'Hiver — Gustave le Blaireau ». Voilà d'où vient tout ce matériel !"}
+    ], ()=>{ ajouterIndice("prospectus3"); marque("h_feuilles"); setTimeout(verifierProgression, 400); });
+    return;
+  }
+  /* --- bazar --- */
+  if(id==="gustave"){
+    dire([
+      {p:"gustave", t:"Bienvenue au Bazar d'Hiver ! Bulbes, outils, curiosités givrées en tout genre..."},
+      {p:"clever", t:"Bonjour, Gustave. Reconnaissez-vous ces billes qui fument ?"},
+      {p:"gustave", t:"Mon Brouillard en poudre ! Ça fait un froid brumeux, puis ça disparaît. J'en ai vendu un sachet mardi, à un petit client encapuchonné, un artiste."},
+      {p:"bro", t:"Et il a payé comment ? En pièces d'or ?"},
+      {p:"gustave", t:"Non... avec une poignée de bulbes de tulipe ! Et il a aussi pris ma lime fine. « Pour les petits loquets », qu'il disait."},
+      {p:"clever", t:"Brouillard, bulbes, lime... Gustave, vous venez de résoudre la moitié de mon enquête."}
+    ], ()=>{ ajouterIndice("brouillardpoudre"); ajouterIndice("bulbes"); ajouterIndice("limefine"); marque("h_gustave"); });
+    return;
+  }
+  if(id==="affiche"){
+    dire([
+      {p:"clever", t:"L'affiche du Concours des Jardiniers ! Barnabé soulève des pots... Pin-Pon bricole... et Filoue ?"},
+      {p:"clever", t:"« Le numéro du Spectre de Filoue l'acrobate a raté : tout le public a ri. » Et regarde sa petite cape..."},
+      {p:"bro", t:"Oh oh."}
+    ], ()=>{ ajouterIndice("affiche3"); marque("h_affiche"); });
+    return;
+  }
+}
+function mission_G(gag){
+  dire(gag.concat([
+    {p:"bro", t:"La passerelle n'a même pas grincé ! Et regarde... une toute petite empreinte de patte dans le givre !"},
+    {p:"clever", t:"Excellente trouvaille, Bro. Notre voleur est aussi léger que toi... voire plus."}
+  ]), ()=>{ ajouterIndice("passerelle"); ajouterIndice("empreintegivre"); marque("h_passerelle"); });
+}
+
+/* ---------- LA CONFRONTATION AU KIOSQUE ---------- */
+function confrontation_G(){
+  S.ecran="lieu"; S.lieu="kiosque"; majUI();
+  montrer(`<div class="scene-svg">${artKiosque_G()}</div>`);
+  dire([
+    {p:"filoue", t:"« Et pour ma prochaine figure, mesdames et messieurs... » ... C-C-Clever ?! Qu'est-ce que vous faites ici ?"},
+    {p:"clever", t:"Nous venons applaudir... le Spectre de Givre."},
+    {p:"filoue", t:"Le... le quoi ? Je ne vois pas du tout de quoi vous parlez !"},
+    {p:"clever", t:"Vraiment ? Alors vérifions si ma logique est imparable. Aide-moi, détective : à chaque phrase, choisis la bonne preuve dans notre carnet !"}
+  ], ()=>preuve(0, fuite_G));
+}
+function fuite_G(){
+  dire([
+    {p:"filoue", t:"Non ! Enfin... je... VOUS NE M'ATTRAPEREZ JAMAIS !"},
+    {p:"recit", t:"Filoue bondit sur son fil et file en équilibre vers la sortie du kiosque !"}
+  ], ()=>{
+    choisir({p:"clever", t:"Vite, Bro ! Filoue file sur son fil ! Que fais-tu ?"}, [
+      { t:"💦 Arrose le fil avec le tuyau !", fn:()=>dire([
+          {p:"bro", t:"À L'EAU !"},
+          {p:"recit", t:"Le jet arrose... McFlare de la tête aux pieds. « BROOO ! » Pendant ce temps, Filoue avance toujours !"}
+        ], fuite2_G) },
+      { t:"🌱 Pousse la brouette de terreau sous le fil !", fn:reussite_G },
+      { t:"🐝 Crie « REGARDE, UNE ABEILLE GÉANTE ! »", fn:()=>dire([
+          {p:"bro", t:"REGARDE, UNE ABEILLE GÉANTE !!!"},
+          {p:"recit", t:"Filoue ne se retourne même pas. Forcément : les funambules gardent toujours les yeux devant..."}
+        ], fuite2_G) }
+    ]);
+  });
+}
+function fuite2_G(){
+  choisir({p:"clever", t:"Elle y est presque, Bro ! Réfléchis : qu'y a-t-il juste EN DESSOUS du fil ?"}, [
+    { t:"🌱 La brouette de terreau ! Pousse-la !", fn:reussite_G },
+    { t:"💦 Le tuyau ! Encore !", fn:()=>dire([{p:"mcflare", t:"(trempé) N'y pense même pas, Bro."}], fuite2_G) }
+  ]);
+}
+function reussite_G(){
+  son("bon");
+  dire([
+    {p:"bro", t:"La brouette de terreau ! GERONIMOOOO !"},
+    {p:"recit", t:"POUF ! Filoue perd l'équilibre... et atterrit tout en douceur dans le terreau bien moelleux, pile dans les bras de McFlare."},
+    {p:"mcflare", t:"Filoue la Souris... vous êtes faite comme une... souris. Enfin, vous voyez l'idée."},
+    {p:"filoue", t:"D'accord, d'accord... c'était moi. Mais laissez-moi vous expliquer !"},
+    {p:"filoue", t:"Au Concours, mon numéro du Spectre a raté... et tout le monde a ri de moi. TOUT LE MONDE."},
+    {p:"filoue", t:"Alors j'ai voulu prouver que j'étais une VRAIE artiste : faire disparaître le trésor le mieux gardé du parc ! J'allais le rendre, promis..."},
+    {p:"clever", t:"Faire disparaître, c'est facile, Filoue. Le vrai talent, c'est de faire APPARAÎTRE. Et si tu rendais l'Orchidée d'Or... en spectacle ?"},
+    {p:"filoue", t:"En... en spectacle ? Vous feriez ça pour moi ?"},
+    {p:"recit", t:"Le lendemain, à la serre : « Mesdames et messieurs... ABRACADABRA ! » L'Orchidée d'Or réapparaît sous sa cloche, dans un tonnerre d'applaudissements."},
+    {p:"mcflare", t:"Affaire classée. Chapeau, Clever !"},
+    {p:"bro", t:"Et une révérence d'acrobate pour Filoue !"}
+  ], finirPartie);
+}
+const INTRO_G = [
+  { art:artIntro1_G, t:"Londres, la nuit. Dans la Grande Serre veille le plus rare des trésors : l'Orchidée d'Or, le grand prix du Concours des Jardiniers." },
+  { art:artIntro2_G, t:"Mais cette nuit... un spectre de givre a glissé entre les plantes ! Au matin, la cloche de verre était vide. Le gardien tremble encore : « J'ai vu un SPECTRE ! »" },
+  { art:()=>artQG_G(true), t:"Un spectre ? Scotland Yard n'y croit pas une seconde. Le détective McFlare file à Mystery Lane... chez la meilleure détective du monde." }
+];
+const CAS_G = {
+  id:"givre", cle:"mysterylane-spectre-givre",
+  emoji:"❄️", titre:"L'Affaire du Spectre de Givre",
+  accroche:"Un « spectre de givre » a fait disparaître l'Orchidée d'Or de la Grande Serre. Clever &amp; Bro enquêtent dans le froid. 🌿",
+  lieuFinal:"kiosque", libelleCoupable:"C'est le Spectre de Givre !",
+  indices:IND_G, suspects:SUS_G, deductions:DED_G, ordreDed:ORD_G, preuves:PRV_G, lieux:LIEUX_G,
+  etatNeuf:()=>({ suspects:{ barnabe:"?", pinpon:"?", filoue:"?" }, lieux:{ serre:"verrou", bosquet:"verrou", bazar:"verrou", kiosque:"verrou" } }),
+  intro:INTRO_G, briefing:briefing_G, verif:verif_G, toucher:toucher_G, confrontation:confrontation_G, entrees:ENTREES_G,
+  art:{ titre:artTitre_G, carte:artCarte_G, fin:artFin_G, lieux:{ serre:artSerre_G, bosquet:artBosquet_G, bazar:artBazar_G } }
+};
+
+CASES.push(CAS_FANTOME, CAS_DRAGON, CAS_G);
 
 /* ---------- DÉMARRAGE ---------- */
 function init(){

@@ -1,0 +1,76 @@
+{
+  "_comment": "SPEC D'ENQUÊTE — squelette logique compact (~1 page). L'agent scénariste le remplit ; l'utilisateur le relit ; PUIS l'agent codeur l'étend en JS. Ne contient PAS les dialogues (générés au code-gen). Exemple ci-dessous = l'enquête 'dragon' déjà existante.",
+
+  "id": "dragon",
+  "suffixe": "_D",
+  "cle": "mysterylane-dragon-tamise",
+  "emoji": "🐉",
+  "titre": "L'Affaire du Dragon de la Tamise",
+  "accroche": "Un « dragon » luisant a volé la Perle de Brume à l'Aquarium des Docks. Clever &amp; Bro plongent dans le mystère. 🌊",
+
+  "trophee": "La Perle de Brume",
+  "decor": "Aquarium des Docks, la nuit",
+  "phenomene": { "apparence": "dragon luisant", "verbe": "a jailli du grand bassin et rugi" },
+
+  "cast": {
+    "gardien":  { "id": "pepin",  "nom": "Pépin, le gardien",  "espece": "pélican" },
+    "temoin2":  { "id": "ecume",  "nom": "Écume, la mouette",  "espece": "mouette" },
+    "marchand": { "id": "pinces", "nom": "Père Pinces",        "espece": "crabe" }
+  },
+
+  "truc": {
+    "indiceBrillant": { "cle": "encre", "nom": "Encre luisante", "explication": "encre qui brille dans le noir" },
+    "produitAchete":  { "cle": "encrelune", "nom": "L'Encre de Lune" }
+  },
+
+  "suspects": [
+    { "id": "gaston", "nom": "Gaston le Morse", "espece": "morse", "role": "homme fort",
+      "statut": "innocent", "elimineEn": "d2", "trait": "trop gros/osseux", "raison": "trop gros pour la grille aux barreaux écartés de deux doigts" },
+    { "id": "ronron", "nom": "Ronron le Chat", "espece": "chat", "role": "crooner",
+      "statut": "innocent", "elimineEn": "d3", "trait": "déteste l'eau", "raison": "un chat déteste l'eau, or le voleur a nagé et plongé" },
+    { "id": "inko", "nom": "Inko la Pieuvre", "espece": "pieuvre", "role": "artiste d'effets spéciaux",
+      "statut": "coupable", "traits": ["molle/sans os", "nage", "à ventouses"], "mobile": "son numéro du Grand Dragon a raté, tout le public a ri" }
+  ],
+
+  "chaine": {
+    "d1": { "question": "pourquoi le dragon luisait", "besoin": ["encre", "t_pepin"], "reponse": "couvert d'encre luminescente" },
+    "d2": { "question": "par où il est entré (grille verrouillée, rien de cassé)", "besoin": ["grille2", "ventouse", "t_pepin"], "reponse": "grille 2 doigts → animal mou sans os", "elimine": "gaston" },
+    "d3": { "question": "comment il a quitté le bassin", "besoin": ["chaine", "t_ecume"], "reponse": "il a nagé et plongé", "elimine": "ronron" },
+    "d4": { "question": "comment ouvrir la cloche sans la casser", "besoin": ["crochet", "serrure2"], "reponse": "crochet fin" },
+    "d5": { "question": "QUI est le coupable", "besoin": ["encrelune", "coquillages", "crochet", "affiche2"], "besoinDed": ["d1","d2","d3","d4"], "reponse": "inko" }
+  },
+
+  "lieux": [
+    { "id": "aquarium", "nom": "L'Aquarium", "indices": ["t_pepin","serrure2","encre","grille2","ventouse"], "deds": ["d1","d2"],
+      "hotspots": ["pepin (récit)","dome (loquet rayé)","encre (au sol)","grille2 (mini-jeu → grille2+ventouse)"] },
+    { "id": "ponton", "nom": "Le Ponton", "indices": ["t_ecume","chaine","prospectus2"], "deds": ["d3"],
+      "hotspots": ["ecume (récit)","chaine (traces)","caisse (prospectus2 → verif)"] },
+    { "id": "echoppe", "nom": "L'Échoppe des Docks", "indices": ["encrelune","coquillages","crochet","affiche2"], "deds": ["d4","d5"],
+      "hotspots": ["pinces (encrelune+coquillages+crochet)","affiche (affiche2)"] },
+    { "id": "phare", "nom": "Le Vieux Phare", "final": true, "indices": [], "deds": [] }
+  ],
+
+  "indicesRestants": {
+    "serrure2": { "ico": "🔍", "nom": "Loquet rayé", "desc": "La cloche de verre n'est pas cassée, son loquet porte de fines rayures." },
+    "grille2":  { "ico": "🕳️", "nom": "Grille du bassin", "desc": "Barreaux écartés de deux doigts à peine." },
+    "ventouse": { "ico": "⭕", "nom": "Empreinte de ventouse", "desc": "Marque ronde sur la vitre près de la grille." },
+    "t_ecume":  { "ico": "🐦", "nom": "Le récit d'Écume", "desc": "« Elle ne rampait pas, elle NAGEAIT ! »" },
+    "chaine":   { "ico": "🧗", "nom": "Chaîne d'amarrage", "desc": "Traces d'encre du bord jusque sous l'eau." },
+    "prospectus2": { "ico": "📜", "nom": "Prospectus des Docks", "desc": "« Échoppe des Curiosités — Père Pinces, Docks »." },
+    "coquillages": { "ico": "🐚", "nom": "Payé en coquillages", "desc": "Le client a payé avec des coquillages nacrés." },
+    "crochet":  { "ico": "🪝", "nom": "Le crochet fin", "desc": "Acheté « pour ouvrir les petits loquets »." },
+    "affiche2": { "ico": "🎭", "nom": "L'affiche du Spectacle", "desc": "Le numéro du Grand Dragon d'Inko a raté." },
+    "t_pepin":  { "ico": "👁️", "nom": "Le récit de Pépin", "desc": "« Un dragon luisant a jailli, la grille est restée fermée à clé ! »" }
+  },
+
+  "confrontation": {
+    "lieuFinal": "phare",
+    "libelleCoupable": "C'est le Dragon de la Tamise !",
+    "preuves": [
+      { "phrase": "tu luisais parce que couverte de...", "bonne": "encrelune", "leurres": ["prospectus2","coquillages"] },
+      { "phrase": "tu es passée par la grille où tu as laissé...", "bonne": "ventouse", "leurres": ["affiche2","crochet"] },
+      { "phrase": "tu as ouvert la cloche grâce à...", "bonne": "crochet", "leurres": ["coquillages","encrelune"] }
+    ],
+    "chase": { "propGagnant": "grand filet de pêche", "leurres": ["fanal du phare","crier « un crabe géant »"] }
+  }
+}

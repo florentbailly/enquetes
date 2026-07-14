@@ -1,0 +1,74 @@
+{
+  "_comment": "SPEC — Épisode 3. Squelette logique compact, à valider AVANT code-gen. Fraîcheur: 4 axes neufs (décor serre / truc = brouillard froid, pas 'ça brille' / traits = trop lourd + un seul bras / métier = acrobate).",
+
+  "id": "givre",
+  "suffixe": "_G",
+  "cle": "mysterylane-spectre-givre",
+  "emoji": "❄️",
+  "titre": "L'Affaire du Spectre de Givre",
+  "accroche": "Un « spectre de givre » a fait disparaître l'Orchidée d'Or de la Grande Serre. Clever &amp; Bro enquêtent dans le froid. 🌿",
+
+  "trophee": "L'Orchidée d'Or",
+  "decor": "La Grande Serre (jardin d'hiver), la nuit",
+  "phenomene": { "apparence": "spectre de givre", "verbe": "a glissé entre les plantes en répandant un froid brumeux" },
+
+  "cast": {
+    "gardien":  { "id": "sylvain", "nom": "Sylvain, le gardien", "espece": "hérisson jardinier" },
+    "temoin2":  { "id": "nocto",   "nom": "Nocto, la chouette",  "espece": "chouette (voit la nuit)" },
+    "marchand": { "id": "gustave", "nom": "Gustave le Blaireau", "espece": "blaireau, tient le Bazar d'Hiver" }
+  },
+
+  "truc": {
+    "indiceRevelateur": { "cle": "billesfroides", "nom": "Billes qui fument", "explication": "de la glace carbonique : elle fume et fait un froid brumeux, puis disparaît — pas un fantôme" },
+    "produitAchete":    { "cle": "brouillardpoudre", "nom": "Brouillard en poudre" }
+  },
+
+  "suspects": [
+    { "id": "barnabe", "nom": "Barnabé l'Ours", "espece": "ours", "role": "finaliste, force de la nature",
+      "statut": "innocent", "elimineEn": "d2", "trait": "trop lourd", "raison": "un ours aurait brisé la passerelle de verre au-dessus du bassin ; or elle est intacte" },
+    { "id": "pinpon", "nom": "Pin-Pon le Raton", "espece": "raton laveur", "role": "finaliste, bricoleur",
+      "statut": "innocent", "elimineEn": "d3", "trait": "un bras en écharpe", "raison": "le voleur a grimpé et noué une corde à DEUX mains ; Pin-Pon a le bras plâtré" },
+    { "id": "filoue", "nom": "Filoue la Souris", "espece": "souris", "role": "acrobate / funambule du Concours",
+      "statut": "coupable", "traits": ["très légère", "deux mains agiles", "petite grimpeuse"], "mobile": "son numéro du « Spectre » a raté au Concours, tout le public a ri" }
+  ],
+
+  "chaine": {
+    "d1": { "question": "pourquoi il faisait ce froid brumeux (spectre)", "besoin": ["billesfroides", "t_sylvain"], "reponse": "de la glace carbonique répand un brouillard froid" },
+    "d2": { "question": "par où il est entré (serre fermée, rien de cassé)", "besoin": ["passerelle", "empreintegivre", "t_sylvain"], "reponse": "il a traversé la passerelle de verre sans la briser → très léger", "elimine": "barnabe" },
+    "d3": { "question": "comment il s'est enfui de la serre", "besoin": ["deuxmains", "t_nocto"], "reponse": "il a grimpé le grand palmier et noué une corde à deux mains", "elimine": "pinpon" },
+    "d4": { "question": "comment ouvrir la cloche sans la casser", "besoin": ["limefine", "loquerayures"], "reponse": "une lime très fine" },
+    "d5": { "question": "QUI est le coupable", "besoin": ["brouillardpoudre", "bulbes", "limefine", "affiche3"], "besoinDed": ["d1","d2","d3","d4"], "reponse": "filoue" }
+  },
+
+  "lieux": [
+    { "id": "serre", "nom": "La Grande Serre", "indices": ["t_sylvain","loquerayures","billesfroides","passerelle","empreintegivre"], "deds": ["d1","d2"],
+      "hotspots": ["sylvain (récit)","cloche (loquet rayé)","billes (glace carbo au sol)","passerelle (mini-jeu → passerelle + empreinte légère dans le givre)"] },
+    { "id": "bosquet", "nom": "Le Bosquet", "indices": ["t_nocto","deuxmains","prospectus3"], "deds": ["d3"],
+      "hotspots": ["nocto (récit)","palmier (marques de deux mains + corde nouée)","tas de feuilles (prospectus3 → verif)"] },
+    { "id": "bazar", "nom": "Le Bazar d'Hiver", "indices": ["brouillardpoudre","bulbes","limefine","affiche3"], "deds": ["d4","d5"],
+      "hotspots": ["gustave (brouillardpoudre + bulbes + limefine)","affiche (affiche3)"] },
+    { "id": "kiosque", "nom": "Le Kiosque à Musique", "final": true, "indices": [], "deds": [] }
+  ],
+
+  "indicesRestants": {
+    "t_sylvain":     { "ico": "👁️", "nom": "Le récit de Sylvain", "desc": "« Un spectre de givre a glissé entre mes plantes, un froid brumeux partout... et l'Orchidée d'Or a disparu ! La serre était fermée à clé ! »" },
+    "loquerayures":  { "ico": "🔍", "nom": "Loquet rayé", "desc": "La cloche de verre de l'Orchidée n'est pas cassée : son petit loquet porte de fines rayures." },
+    "passerelle":    { "ico": "🕳️", "nom": "Passerelle de verre", "desc": "Au-dessus du bassin aux nénuphars, une fine passerelle de verre. Intacte, pas la moindre fêlure." },
+    "empreintegivre":{ "ico": "❄️", "nom": "Empreinte dans le givre", "desc": "Sur la passerelle givrée, une toute petite empreinte de patte, très légère." },
+    "deuxmains":     { "ico": "🖐️", "nom": "Marques de deux mains", "desc": "Sur le tronc du grand palmier : deux empreintes de mains, et une corde nouée qui a demandé deux mains." },
+    "prospectus3":   { "ico": "📜", "nom": "Prospectus du Bazar", "desc": "« Bazar d'Hiver — Gustave le Blaireau ». Trouvé dans un tas de feuilles." },
+    "bulbes":        { "ico": "🧅", "nom": "Payé en bulbes", "desc": "Le client de Gustave a payé avec une poignée de bulbes de tulipe." },
+    "affiche3":      { "ico": "🎪", "nom": "L'affiche du Concours", "desc": "Concours des Jardiniers. Le numéro du « Spectre » de Filoue l'acrobate a raté : tout le public a ri." }
+  },
+
+  "confrontation": {
+    "lieuFinal": "kiosque",
+    "libelleCoupable": "C'est le Spectre de Givre !",
+    "preuves": [
+      { "phrase": "tu faisais ce froid de spectre parce que tu avais répandu...", "bonne": "brouillardpoudre", "leurres": ["prospectus3","bulbes"] },
+      { "phrase": "tu as traversé la passerelle de verre, où tu as laissé...", "bonne": "empreintegivre", "leurres": ["affiche3","limefine"] },
+      { "phrase": "tu as ouvert la cloche sans la casser grâce à...", "bonne": "limefine", "leurres": ["bulbes","brouillardpoudre"] }
+    ],
+    "chase": { "propGagnant": "la brouette de terreau (atterrissage tout doux)", "leurres": ["le tuyau d'arrosage", "crier « une abeille géante ! »"] }
+  }
+}
